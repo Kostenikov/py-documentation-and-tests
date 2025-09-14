@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.db.models import F, Count
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import TokenAuthentication
@@ -8,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
+from rest_framework.viewsets import GenericViewSet
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from cinema.models import Genre, Actor, CinemaHall, Movie, MovieSession, Order
@@ -133,18 +134,21 @@ class MovieViewSet(
         parameters=[
             OpenApiParameter(
                 "title",
-                type=str,
+                type=OpenApiTypes.STR,
                 description="Filter by title (ex. ?title=movie_name)",
+                location=OpenApiParameter.QUERY,
             ),
             OpenApiParameter(
                 "genres",
                 type={"type": "array", "items": {"type": "number"}},
                 description="Filter by genres id (ex. ?genres=2,3)",
+                location=OpenApiParameter.QUERY,
             ),
             OpenApiParameter(
                 "actors",
                 type={"type": "array", "items": {"type": "number"}},
                 description="Filter by actors id (ex. ?actors=2,3)",
+                location=OpenApiParameter.QUERY,
             )
         ]
     )
@@ -196,13 +200,15 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
         parameters=[
             OpenApiParameter(
                 "date",
-                type=str,
+                type=OpenApiTypes.DATE,
                 description="Filter by date (ex. ?date=2024-10-08)",
+                location=OpenApiParameter.QUERY,
             ),
             OpenApiParameter(
                 "movie",
-                type=int,
+                type=OpenApiTypes.INT,
                 description="Filter by movie id (ex. ?movie=1)",
+                location=OpenApiParameter.QUERY,
             ),
         ]
     )
